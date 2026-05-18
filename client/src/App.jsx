@@ -4,8 +4,9 @@ import TeacherDashboard from './components/TeacherDashboard'
 import StudentDetails from './components/StudentDetails'
 import RegisterPage from './pages/auth/RegisterPage'
 import TeacherExamsPage from './pages/teacher/TeacherExamsPage'
-import './App.css'
 import StudentExamsPage from './pages/student/StudentExamsPage'
+import NavigationMenu from './components/layout/NavigationMenu'
+import './App.css'
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null)
@@ -19,6 +20,29 @@ function App() {
   const handleRegister = (user) => {
     setCurrentUser(user)
     setScreen('dashboard')
+  }
+
+  const handleLogout = () => {
+    setCurrentUser(null)
+    setScreen('login')
+  }
+
+  const renderWithNavigation = (pageContent) => {
+    return (
+      <>
+        <NavigationMenu
+          currentUser={currentUser}
+          activeScreen={screen}
+          onOpenDashboard={() => setScreen('dashboard')}
+          onOpenStudentDetails={() => setScreen('students')}
+          onOpenTeacherExams={() => setScreen('teacherExams')}
+          onOpenStudentExams={() => setScreen('studentExams')}
+          onLogout={handleLogout}
+        />
+
+        {pageContent}
+      </>
+    )
   }
 
   if (!currentUser && screen === 'register') {
@@ -40,11 +64,13 @@ function App() {
   }
 
   if (screen === 'students') {
-    return <StudentDetails onBack={() => setScreen('dashboard')} />
+    return renderWithNavigation(
+      <StudentDetails onBack={() => setScreen('dashboard')} />
+    )
   }
 
   if (screen === 'teacherExams') {
-    return (
+    return renderWithNavigation(
       <TeacherExamsPage
         currentUser={currentUser}
         onBack={() => setScreen('dashboard')}
@@ -52,8 +78,8 @@ function App() {
     )
   }
 
-    if (screen === 'studentExams') {
-    return (
+  if (screen === 'studentExams') {
+    return renderWithNavigation(
       <StudentExamsPage
         currentUser={currentUser}
         onBack={() => setScreen('dashboard')}
@@ -61,7 +87,7 @@ function App() {
     )
   }
 
-    return (
+  return renderWithNavigation(
     <TeacherDashboard
       onOpenStudentDetails={() => setScreen('students')}
       onOpenTeacherExams={() => setScreen('teacherExams')}

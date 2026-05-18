@@ -5,6 +5,7 @@ import StudentDetails from './components/StudentDetails'
 import RegisterPage from './pages/auth/RegisterPage'
 import TeacherExamsPage from './pages/teacher/TeacherExamsPage'
 import './App.css'
+import StudentExamsPage from './pages/student/StudentExamsPage'
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null)
@@ -51,10 +52,20 @@ function App() {
     )
   }
 
-  return (
+    if (screen === 'studentExams') {
+    return (
+      <StudentExamsPage
+        currentUser={currentUser}
+        onBack={() => setScreen('dashboard')}
+      />
+    )
+  }
+
+    return (
     <TeacherDashboard
       onOpenStudentDetails={() => setScreen('students')}
       onOpenTeacherExams={() => setScreen('teacherExams')}
+      onOpenStudentExams={() => setScreen('studentExams')}
     />
   )
 }

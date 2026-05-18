@@ -1,5 +1,5 @@
 class StorageService {
-  save(key, value) {
+  set(key, value) {
     localStorage.setItem(key, JSON.stringify(value))
   }
 
@@ -15,10 +15,6 @@ class StorageService {
 
   remove(key) {
     localStorage.removeItem(key)
-  }
-
-  clear() {
-    localStorage.clear()
   }
 }
 

@@ -17,7 +17,7 @@ function LoginScreen({ onLogin, onGoToRegister }) {
       return
     }
 
-    storageService.save('currentUser', user)
+    storageService.set('currentUser', user)
     onLogin(user)
   }
 

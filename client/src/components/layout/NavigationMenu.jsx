@@ -1,3 +1,5 @@
+import { configService } from '../../services'
+
 function NavigationMenu({
   currentUser,
   activeScreen,
@@ -17,7 +19,11 @@ function NavigationMenu({
     <nav className="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
       <div className="container">
         <span className="navbar-brand fw-bold">
-          FullStack Exams App
+            {configService.getAppName()}
+        </span>
+
+        <span className="badge bg-secondary">
+            {configService.getApiMode()}
         </span>
 
         <div className="d-flex flex-wrap gap-2 align-items-center">

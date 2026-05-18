@@ -2,14 +2,39 @@ import { useState } from 'react'
 import LoginScreen from './components/LoginScreen'
 import TeacherDashboard from './components/TeacherDashboard'
 import StudentDetails from './components/StudentDetails'
+import RegisterPage from './pages/auth/RegisterPage'
 import './App.css'
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [screen, setScreen] = useState('dashboard')
+  const [currentUser, setCurrentUser] = useState(null)
+  const [screen, setScreen] = useState('login')
 
-  if (!isLoggedIn) {
-    return <LoginScreen onLogin={() => setIsLoggedIn(true)} />
+  const handleLogin = (user) => {
+    setCurrentUser(user)
+    setScreen('dashboard')
+  }
+
+  const handleRegister = (user) => {
+    setCurrentUser(user)
+    setScreen('dashboard')
+  }
+
+  if (!currentUser && screen === 'register') {
+    return (
+      <RegisterPage
+        onRegister={handleRegister}
+        onBackToLogin={() => setScreen('login')}
+      />
+    )
+  }
+
+  if (!currentUser) {
+    return (
+      <LoginScreen
+        onLogin={handleLogin}
+        onGoToRegister={() => setScreen('register')}
+      />
+    )
   }
 
   if (screen === 'students') {

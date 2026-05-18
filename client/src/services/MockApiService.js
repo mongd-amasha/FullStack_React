@@ -1,5 +1,6 @@
 import { mockDatabase } from '../data/mockDatabase'
 import { loggerService } from './LoggerService'
+import Exam from '../models/Exam'
 
 class MockApiService {
   async getUsers() {
@@ -67,6 +68,53 @@ class MockApiService {
   async getResults() {
     loggerService.info('Loading results from mock database')
     return mockDatabase.results
+  }
+
+    async createExam(examData) {
+    loggerService.info('Creating new exam in mock database')
+
+    const newExam = new Exam(
+      mockDatabase.exams.length + 1,
+      examData.title,
+      examData.description,
+      examData.status,
+      examData.teacherId,
+      []
+    )
+
+    mockDatabase.exams.push(newExam)
+
+    return newExam
+  }
+
+  async updateExam(examId, examData) {
+    loggerService.info(`Updating exam ${examId} in mock database`)
+
+    const exam = mockDatabase.exams.find((item) => item.id === examId)
+
+    if (!exam) {
+      return null
+    }
+
+    exam.title = examData.title
+    exam.description = examData.description
+    exam.status = examData.status
+
+    return exam
+  }
+
+  async changeExamStatus(examId, status) {
+    loggerService.info(`Changing exam ${examId} status to ${status}`)
+
+    const exam = mockDatabase.exams.find((item) => item.id === examId)
+
+    if (!exam) {
+      return null
+    }
+
+    exam.status = status
+
+    return exam
   }
 }
 

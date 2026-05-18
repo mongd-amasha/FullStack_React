@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { getExams, getStudents } from '../api/examService'
 
-function TeacherDashboard({ onOpenStudentDetails }) {
+function TeacherDashboard({ onOpenStudentDetails, onOpenTeacherExams }) {
   const [exams, setExams] = useState([])
   const [students, setStudents] = useState([])
   const [loading, setLoading] = useState(false)
@@ -31,6 +31,10 @@ function TeacherDashboard({ onOpenStudentDetails }) {
 
         <button className="btn btn-outline-success btn-lg ms-3" onClick={onOpenStudentDetails}>
           Student Details
+        </button>
+
+        <button className="btn btn-outline-primary btn-lg ms-3" onClick={onOpenTeacherExams}>
+          Manage Exams
         </button>
       </div>
 

@@ -116,6 +116,58 @@ class MockApiService {
 
     return exam
   }
+
+    async getActiveExams() {
+    loggerService.info('Loading active exams from mock database')
+    return mockDatabase.exams.filter((exam) => exam.status === 'active')
+  }
+
+  async submitExamAnswers(examId, studentId, answers) {
+    loggerService.info(`Submitting answers for exam ${examId}`)
+
+    const questions = mockDatabase.questions.filter(
+      (question) => question.examId === examId
+    )
+
+    let correctAnswers = 0
+
+    questions.forEach((question) => {
+      if (answers[question.id] === question.correctAnswer) {
+        correctAnswers += 1
+      }
+    })
+
+    const score = Math.round((correctAnswers / questions.length) * 100)
+
+    const newSubmission = {
+      id: mockDatabase.submissions.length + 1,
+      examId,
+      studentId,
+      answers,
+      submittedAt: new Date().toISOString()
+    }
+
+    const newResult = {
+      id: mockDatabase.results.length + 1,
+      examId,
+      studentId,
+      score,
+      status: score >= 60 ? 'passed' : 'failed'
+    }
+
+    mockDatabase.submissions.push(newSubmission)
+    mockDatabase.results.push(newResult)
+
+    return newResult
+  }
+
+  async getResultByStudentAndExam(studentId, examId) {
+    loggerService.info(`Loading result for student ${studentId} and exam ${examId}`)
+
+    return mockDatabase.results.find(
+      (result) => result.studentId === studentId && result.examId === examId
+    )
+  }
 }
 
 export const mockApiService = new MockApiService()

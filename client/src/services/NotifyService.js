@@ -1,14 +1,23 @@
 class NotifyService {
   success(message) {
-    alert(`Success: ${message}`)
-  }
-
-  error(message) {
-    alert(`Error: ${message}`)
+    return {
+      type: 'success',
+      message
+    }
   }
 
   info(message) {
-    alert(message)
+    return {
+      type: 'info',
+      message
+    }
+  }
+
+  error(message) {
+    return {
+      type: 'danger',
+      message
+    }
   }
 }
 

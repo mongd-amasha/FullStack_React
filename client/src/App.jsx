@@ -1,30 +1,50 @@
 import { useState } from 'react'
-import LoginScreen from './components/LoginScreen'
-import TeacherDashboard from './components/TeacherDashboard'
-import StudentDetails from './components/StudentDetails'
-import RegisterPage from './pages/auth/RegisterPage'
-import TeacherExamsPage from './pages/teacher/TeacherExamsPage'
-import StudentExamsPage from './pages/student/StudentExamsPage'
-import NavigationMenu from './components/layout/NavigationMenu'
 import './App.css'
+import NavigationMenu from './components/layout/NavigationMenu'
+import LoginScreen from './components/LoginScreen'
+import StudentDetails from './components/StudentDetails'
+import TeacherDashboard from './components/TeacherDashboard'
+import RegisterPage from './pages/auth/RegisterPage'
+import StudentExamsPage from './pages/student/StudentExamsPage'
+import TeacherExamsPage from './pages/teacher/TeacherExamsPage'
+import { loggerService, notifyService, storageService } from './services'
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(null)
-  const [screen, setScreen] = useState('login')
+  const [currentUser, setCurrentUser] = useState(() =>
+    storageService.get('currentUser')
+  )
+  const [screen, setScreen] = useState(() => storageService.get('screen') || 'login')
+  const [notification, setNotification] = useState(null)
+
+  const openScreen = (screenName) => {
+    loggerService.info(`Opening screen: ${screenName}`)
+    storageService.set('screen', screenName)
+    setScreen(screenName)
+  }
 
   const handleLogin = (user) => {
+    loggerService.info(`User logged in: ${user.email}`)
+    storageService.set('currentUser', user)
     setCurrentUser(user)
-    setScreen('dashboard')
+    openScreen('dashboard')
+    setNotification(notifyService.success('Login completed successfully'))
   }
 
   const handleRegister = (user) => {
+    loggerService.info(`User registered: ${user.email}`)
+    storageService.set('currentUser', user)
     setCurrentUser(user)
-    setScreen('dashboard')
+    openScreen('dashboard')
+    setNotification(notifyService.success('Account created successfully'))
   }
 
   const handleLogout = () => {
+    loggerService.info('User logged out')
+    storageService.remove('currentUser')
+    storageService.remove('screen')
     setCurrentUser(null)
     setScreen('login')
+    setNotification(null)
   }
 
   const renderWithNavigation = (pageContent) => {
@@ -33,12 +53,20 @@ function App() {
         <NavigationMenu
           currentUser={currentUser}
           activeScreen={screen}
-          onOpenDashboard={() => setScreen('dashboard')}
-          onOpenStudentDetails={() => setScreen('students')}
-          onOpenTeacherExams={() => setScreen('teacherExams')}
-          onOpenStudentExams={() => setScreen('studentExams')}
+          onOpenDashboard={() => openScreen('dashboard')}
+          onOpenStudentDetails={() => openScreen('students')}
+          onOpenTeacherExams={() => openScreen('teacherExams')}
+          onOpenStudentExams={() => openScreen('studentExams')}
           onLogout={handleLogout}
         />
+
+        {notification && (
+          <div className="container mt-3">
+            <div className={`alert alert-${notification.type} mb-0`}>
+              {notification.message}
+            </div>
+          </div>
+        )}
 
         {pageContent}
       </>
@@ -49,7 +77,7 @@ function App() {
     return (
       <RegisterPage
         onRegister={handleRegister}
-        onBackToLogin={() => setScreen('login')}
+        onBackToLogin={() => openScreen('login')}
       />
     )
   }
@@ -58,14 +86,14 @@ function App() {
     return (
       <LoginScreen
         onLogin={handleLogin}
-        onGoToRegister={() => setScreen('register')}
+        onGoToRegister={() => openScreen('register')}
       />
     )
   }
 
   if (screen === 'students') {
     return renderWithNavigation(
-      <StudentDetails onBack={() => setScreen('dashboard')} />
+      <StudentDetails onBack={() => openScreen('dashboard')} />
     )
   }
 
@@ -73,7 +101,7 @@ function App() {
     return renderWithNavigation(
       <TeacherExamsPage
         currentUser={currentUser}
-        onBack={() => setScreen('dashboard')}
+        onBack={() => openScreen('dashboard')}
       />
     )
   }
@@ -82,16 +110,16 @@ function App() {
     return renderWithNavigation(
       <StudentExamsPage
         currentUser={currentUser}
-        onBack={() => setScreen('dashboard')}
+        onBack={() => openScreen('dashboard')}
       />
     )
   }
 
   return renderWithNavigation(
     <TeacherDashboard
-      onOpenStudentDetails={() => setScreen('students')}
-      onOpenTeacherExams={() => setScreen('teacherExams')}
-      onOpenStudentExams={() => setScreen('studentExams')}
+      onOpenStudentDetails={() => openScreen('students')}
+      onOpenTeacherExams={() => openScreen('teacherExams')}
+      onOpenStudentExams={() => openScreen('studentExams')}
     />
   )
 }

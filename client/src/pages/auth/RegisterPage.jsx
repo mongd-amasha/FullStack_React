@@ -17,7 +17,7 @@ function RegisterPage({ onRegister, onBackToLogin }) {
       role
     })
 
-    storageService.save('currentUser', newUser)
+    storageService.set('currentUser', newUser)
     onRegister(newUser)
   }
 

@@ -3,6 +3,7 @@ import LoginScreen from './components/LoginScreen'
 import TeacherDashboard from './components/TeacherDashboard'
 import StudentDetails from './components/StudentDetails'
 import RegisterPage from './pages/auth/RegisterPage'
+import TeacherExamsPage from './pages/teacher/TeacherExamsPage'
 import './App.css'
 
 function App() {
@@ -41,7 +42,21 @@ function App() {
     return <StudentDetails onBack={() => setScreen('dashboard')} />
   }
 
-  return <TeacherDashboard onOpenStudentDetails={() => setScreen('students')} />
+  if (screen === 'teacherExams') {
+    return (
+      <TeacherExamsPage
+        currentUser={currentUser}
+        onBack={() => setScreen('dashboard')}
+      />
+    )
+  }
+
+  return (
+    <TeacherDashboard
+      onOpenStudentDetails={() => setScreen('students')}
+      onOpenTeacherExams={() => setScreen('teacherExams')}
+    />
+  )
 }
 
 export default App

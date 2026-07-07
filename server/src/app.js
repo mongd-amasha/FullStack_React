@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 
+const authRoutes = require('./routes/auth.routes');
 const healthRoutes = require('./routes/health.routes');
 const { notFoundHandler, errorHandler } = require('./middleware/error.middleware');
 
@@ -13,6 +14,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
+app.use('/api/auth', authRoutes);
 app.use('/api/health', healthRoutes);
 
 app.use(notFoundHandler);

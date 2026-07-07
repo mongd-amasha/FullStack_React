@@ -6,6 +6,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth.routes');
 const examRoutes = require('./routes/exam.routes');
 const healthRoutes = require('./routes/health.routes');
+const resultRoutes = require('./routes/result.routes');
 const submissionRoutes = require('./routes/submission.routes');
 const { notFoundHandler, errorHandler } = require('./middleware/error.middleware');
 
@@ -18,6 +19,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/exams', examRoutes);
+app.use('/api/results', resultRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/health', healthRoutes);
 

@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 
 const authRoutes = require('./routes/auth.routes');
+const examRoutes = require('./routes/exam.routes');
 const healthRoutes = require('./routes/health.routes');
 const { notFoundHandler, errorHandler } = require('./middleware/error.middleware');
 
@@ -15,6 +16,7 @@ app.use(cors({
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
+app.use('/api/exams', examRoutes);
 app.use('/api/health', healthRoutes);
 
 app.use(notFoundHandler);

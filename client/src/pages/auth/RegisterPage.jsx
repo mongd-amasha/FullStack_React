@@ -1,24 +1,32 @@
 import { useState } from 'react'
-import { mockApiService, storageService } from '../../services'
+import { authApiService } from '../../services'
 
 function RegisterPage({ onRegister, onBackToLogin }) {
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [role, setRole] = useState('student')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (event) => {
     event.preventDefault()
+    setError('')
+    setLoading(true)
 
-    const newUser = await mockApiService.register({
-      fullName,
-      email,
-      password,
-      role
-    })
-
-    storageService.set('currentUser', newUser)
-    onRegister(newUser)
+    try {
+      const newUser = await authApiService.register({
+        fullName,
+        email,
+        password,
+        role
+      })
+      onRegister(newUser)
+    } catch (error) {
+      setError(error.message || 'Registration failed. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -27,8 +35,10 @@ function RegisterPage({ onRegister, onBackToLogin }) {
         <div className="card-body p-4">
           <h2 className="fw-bold text-center mb-3">Register</h2>
           <p className="text-muted text-center mb-4">
-            Create a new mock user account.
+            Create a new user account.
           </p>
+
+          {error && <div className="alert alert-danger">{error}</div>}
 
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -76,8 +86,12 @@ function RegisterPage({ onRegister, onBackToLogin }) {
               </select>
             </div>
 
-            <button type="submit" className="btn btn-success w-100">
-              Register
+            <button
+              type="submit"
+              className="btn btn-success w-100"
+              disabled={loading}
+            >
+              {loading ? 'Creating account...' : 'Register'}
             </button>
           </form>
 

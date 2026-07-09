@@ -56,7 +56,7 @@ function NavigationMenu({
           </button>
 
           <span className="text-muted ms-2">
-            {currentUser?.name || currentUser?.email}
+            {currentUser?.fullName || currentUser?.name || currentUser?.email}
           </span>
 
           <button className="btn btn-outline-danger" onClick={onLogout}>

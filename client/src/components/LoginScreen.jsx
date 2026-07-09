@@ -1,24 +1,25 @@
 import { useState } from 'react'
-import { mockApiService, storageService } from '../services'
+import { authApiService } from '../services'
 
 function LoginScreen({ onLogin, onGoToRegister }) {
   const [email, setEmail] = useState('teacher@example.com')
   const [password, setPassword] = useState('123456')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     setError('')
+    setLoading(true)
 
-    const user = await mockApiService.login(email, password)
-
-    if (!user) {
-      setError('Invalid email or password')
-      return
+    try {
+      const user = await authApiService.login(email, password)
+      onLogin(user)
+    } catch (error) {
+      setError(error.message || 'Login failed. Please try again.')
+    } finally {
+      setLoading(false)
     }
-
-    storageService.set('currentUser', user)
-    onLogin(user)
   }
 
   return (
@@ -55,8 +56,12 @@ function LoginScreen({ onLogin, onGoToRegister }) {
               />
             </div>
 
-            <button type="submit" className="btn btn-primary w-100">
-              Login
+            <button
+              type="submit"
+              className="btn btn-primary w-100"
+              disabled={loading}
+            >
+              {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
 

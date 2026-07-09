@@ -114,7 +114,7 @@ function App() {
 
   const renderWithNavigation = (pageContent) => {
     return (
-      <>
+      <div className="app-shell">
         <NavigationMenu
           currentUser={currentUser}
           activeScreen={screen}
@@ -134,7 +134,7 @@ function App() {
         )}
 
         {pageContent}
-      </>
+      </div>
     )
   }
 

@@ -11,6 +11,8 @@ function NavigationMenu({
   onLogout
 }) {
   const navigationItems = getNavigationItemsForRole(currentUser?.role)
+  const role = currentUser?.role || 'user'
+  const userName = currentUser?.fullName || currentUser?.name || currentUser?.email
   const screenHandlers = {
     dashboard: onOpenDashboard,
     students: onOpenStudentDetails,
@@ -25,32 +27,37 @@ function NavigationMenu({
   }
 
   return (
-    <nav className="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
-      <div className="container">
-        <span className="navbar-brand fw-bold">
+    <nav className="app-navbar">
+      <div className="container app-navbar-inner">
+        <div className="brand-block">
+          <span className="navbar-brand fw-bold d-block">
             {configService.getAppName()}
-        </span>
-
-        <span className="badge bg-secondary">
+          </span>
+          <span className="api-mode-badge">
             {configService.getApiMode()}
-        </span>
+          </span>
+        </div>
 
-        <div className="d-flex flex-wrap gap-2 align-items-center">
-          {navigationItems.map((item) => (
-            <button
-              key={item.screen}
-              className={getButtonClass(item.screen)}
-              onClick={screenHandlers[item.screen]}
-            >
-              {item.label}
-            </button>
-          ))}
+        <div className="nav-actions">
+          <div className="d-flex flex-wrap gap-2">
+            {navigationItems.map((item) => (
+              <button
+                key={item.screen}
+                className={`${getButtonClass(item.screen)} nav-button`}
+                onClick={screenHandlers[item.screen]}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
 
-          <span className="text-muted ms-2">
-            {currentUser?.fullName || currentUser?.name || currentUser?.email}
+          <span className="role-badge">{role}</span>
+
+          <span className="user-chip">
+            <span className="user-chip-name">{userName}</span>
           </span>
 
-          <button className="btn btn-outline-danger" onClick={onLogout}>
+          <button className="btn btn-outline-danger nav-button" onClick={onLogout}>
             Logout
           </button>
         </div>

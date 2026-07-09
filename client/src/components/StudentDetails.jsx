@@ -41,11 +41,12 @@ function StudentDetails({ currentUser, onBack }) {
 
   if (isStudent) {
     return (
-      <div className="container py-5">
-        <div className="d-flex justify-content-between align-items-center mb-4">
+      <div className="container page-container">
+        <div className="page-header">
           <div>
-            <h1 className="fw-bold">Student Profile</h1>
-            <p className="text-muted mb-0">
+            <p className="page-kicker">Profile</p>
+            <h1 className="page-title">Student Profile</h1>
+            <p className="page-subtitle mb-0">
               View your account information.
             </p>
           </div>
@@ -57,8 +58,8 @@ function StudentDetails({ currentUser, onBack }) {
 
         <div className="row g-4">
           <div className="col-md-6">
-            <div className="card shadow-sm h-100 student-card">
-              <div className="card-body">
+            <article className="student-card h-100">
+              <div>
                 <h4 className="fw-bold mb-1">{studentName}</h4>
                 <p className="text-muted mb-3">{studentEmail}</p>
 
@@ -67,7 +68,7 @@ function StudentDetails({ currentUser, onBack }) {
                   <span className="badge bg-success">Student</span>
                 </p>
               </div>
-            </div>
+            </article>
           </div>
         </div>
       </div>
@@ -75,11 +76,12 @@ function StudentDetails({ currentUser, onBack }) {
   }
 
   return (
-    <div className="container py-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
+    <div className="container page-container">
+      <div className="page-header">
         <div>
-          <h1 className="fw-bold">Student Details</h1>
-          <p className="text-muted mb-0">
+          <p className="page-kicker">Student Records</p>
+          <h1 className="page-title">Student Details</h1>
+          <p className="page-subtitle mb-0">
             Review student information, exam scores, and learning status.
           </p>
         </div>
@@ -92,8 +94,8 @@ function StudentDetails({ currentUser, onBack }) {
       <div className="row g-4">
         {students.map((student) => (
           <div className="col-md-6" key={student.id}>
-            <div className="card shadow-sm h-100 student-card">
-              <div className="card-body">
+            <article className="student-card h-100">
+              <div>
                 <div className="d-flex justify-content-between align-items-start mb-3">
                   <div>
                     <h4 className="fw-bold mb-1">{student.name}</h4>
@@ -114,7 +116,7 @@ function StudentDetails({ currentUser, onBack }) {
                   <span className="badge bg-success">{student.status}</span>
                 </p>
               </div>
-            </div>
+            </article>
           </div>
         ))}
       </div>

@@ -483,15 +483,16 @@ function TeacherExamsPage({ currentUser, onBack }) {
   }
 
   return (
-    <div className="container py-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
+    <div className="container page-container">
+      <div className="page-header">
         <div>
-          <h1 className="fw-bold">Teacher Exam Management</h1>
-          <p className="text-muted mb-0">
+          <p className="page-kicker">Teacher Workspace</p>
+          <h1 className="page-title">Teacher Exam Management</h1>
+          <p className="page-subtitle mb-0">
             Create exams, edit exam details, and change exam status.
           </p>
           {currentUser && (
-            <p className="text-muted small mb-0">
+            <p className="page-meta mb-0">
               Logged in as {formatText(currentUser.fullName || currentUser.email)}
             </p>
           )}
@@ -508,12 +509,14 @@ function TeacherExamsPage({ currentUser, onBack }) {
 
       <div className="row g-4">
         <div className="col-lg-5">
-          <div className="card shadow-sm">
-            <div className="card-header bg-primary text-white fw-bold">
-              {editingExamId ? 'Edit Exam' : 'Create New Exam'}
+          <section className="section-card">
+            <div className="section-card-header">
+              <h2 className="section-card-title">
+                {editingExamId ? 'Edit Exam' : 'Create New Exam'}
+              </h2>
             </div>
 
-            <div className="card-body">
+            <div className="section-card-body">
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
                   <label className="form-label">Exam title</label>
@@ -537,33 +540,35 @@ function TeacherExamsPage({ currentUser, onBack }) {
                   />
                 </div>
 
-                <div className="mb-3">
-                  <label className="form-label">Duration minutes</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    min="1"
-                    value={durationMinutes}
-                    onChange={(event) => setDurationMinutes(event.target.value)}
-                    required
-                  />
+                <div className="row g-3">
+                  <div className="col-md-6">
+                    <label className="form-label">Duration minutes</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      min="1"
+                      value={durationMinutes}
+                      onChange={(event) => setDurationMinutes(event.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="col-md-6">
+                    <label className="form-label">Status</label>
+                    <select
+                      className="form-select"
+                      value={status}
+                      onChange={(event) => setStatus(event.target.value)}
+                    >
+                      <option value="draft">Draft</option>
+                      <option value="published">Published</option>
+                      <option value="closed">Closed</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                  </div>
                 </div>
 
-                <div className="mb-3">
-                  <label className="form-label">Status</label>
-                  <select
-                    className="form-select"
-                    value={status}
-                    onChange={(event) => setStatus(event.target.value)}
-                  >
-                    <option value="draft">Draft</option>
-                    <option value="published">Published</option>
-                    <option value="closed">Closed</option>
-                    <option value="archived">Archived</option>
-                  </select>
-                </div>
-
-                <div className="d-flex gap-2">
+                <div className="form-actions">
                   <button
                     type="submit"
                     className="btn btn-success"
@@ -588,149 +593,175 @@ function TeacherExamsPage({ currentUser, onBack }) {
                 </div>
               </form>
             </div>
-          </div>
+          </section>
         </div>
 
         <div className="col-lg-7">
-          <div className="card shadow-sm">
-            <div className="card-header bg-dark text-white fw-bold">
-              Exams List
+          <section className="section-card">
+            <div className="section-card-header">
+              <h2 className="section-card-title">Exams List</h2>
             </div>
 
-            <div className="card-body">
-              {exams.map((exam) => (
-                <div className="border rounded p-3 mb-3" key={exam.id}>
-                  <div className="d-flex justify-content-between align-items-start">
-                    <div>
-                      <h4 className="fw-bold mb-1">
-                        {formatText(exam.title)}
-                      </h4>
-                      <p className="text-muted mb-2">
-                        {formatText(exam.description)}
-                      </p>
-                      <p className="text-muted small mb-2">
-                        Duration: {exam.durationMinutes || exam.duration_minutes || 0} minutes
-                      </p>
+            <div className="section-card-body">
+              <div className="exam-list">
+                {exams.map((exam) => (
+                  <article className="exam-card" key={exam.id}>
+                    <div className="exam-card-header">
+                      <div>
+                        <h3 className="h4 exam-card-title">
+                          {formatText(exam.title)}
+                        </h3>
+                        <p className="text-muted mb-2">
+                          {formatText(exam.description)}
+                        </p>
+                        <div className="exam-meta">
+                          <span>
+                            Duration: {exam.durationMinutes || exam.duration_minutes || 0} minutes
+                          </span>
+                        </div>
+                      </div>
 
-                      <span className={`badge ${getStatusBadgeClass(exam.status)}`}>
-                        {formatText(exam.status)}
-                      </span>
+                      <div className="d-flex flex-column align-items-end gap-2">
+                        <span className={`badge status-badge ${getStatusBadgeClass(exam.status)}`}>
+                          {formatText(exam.status)}
+                        </span>
+
+                        <button
+                          className="btn btn-sm btn-outline-primary"
+                          onClick={() => handleEdit(exam)}
+                        >
+                          Edit
+                        </button>
+                      </div>
                     </div>
 
-                    <button
-                      className="btn btn-sm btn-outline-primary"
-                      onClick={() => handleEdit(exam)}
-                    >
-                      Edit
-                    </button>
-                  </div>
+                    <div className="exam-actions">
+                      <div>
+                        <label className="form-label small fw-bold">
+                          Change status
+                        </label>
 
-                  <div className="mt-3 d-flex flex-wrap gap-2 align-items-end">
-                    <div>
-                      <label className="form-label small fw-bold">
-                        Change status
-                      </label>
+                        <select
+                          className="form-select form-select-sm"
+                          value={exam.status}
+                          onChange={(event) =>
+                            handleStatusChange(exam.id, event.target.value)
+                          }
+                        >
+                          <option value="draft">Draft</option>
+                          <option value="published">Published</option>
+                          <option value="closed">Closed</option>
+                          <option value="archived">Archived</option>
+                        </select>
+                      </div>
 
-                      <select
-                        className="form-select form-select-sm"
-                        value={exam.status}
-                        onChange={(event) =>
-                          handleStatusChange(exam.id, event.target.value)
-                        }
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-success"
+                        onClick={() => openQuestions(exam)}
                       >
-                        <option value="draft">Draft</option>
-                        <option value="published">Published</option>
-                        <option value="closed">Closed</option>
-                        <option value="archived">Archived</option>
-                      </select>
+                        Questions
+                      </button>
+
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-dark"
+                        onClick={() => openSubmissions(exam)}
+                      >
+                        Submissions
+                      </button>
                     </div>
-
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-outline-success"
-                      onClick={() => openQuestions(exam)}
-                    >
-                      Questions
-                    </button>
-
-                    <button
-                      type="button"
-                      className="btn btn-sm btn-outline-dark"
-                      onClick={() => openSubmissions(exam)}
-                    >
-                      Submissions
-                    </button>
-                  </div>
-                </div>
-              ))}
+                  </article>
+                ))}
+              </div>
 
               {exams.length === 0 && (
-                <p className="text-muted mb-0">No exams found.</p>
+                <div className="empty-state">No exams found.</div>
               )}
             </div>
-          </div>
+          </section>
         </div>
       </div>
 
       {selectedExam && (
-        <div className="card shadow-sm mt-4">
-          <div className="card-header bg-success text-white fw-bold">
-            Questions for {formatText(selectedExam.title)}
+        <section className="section-card management-section">
+          <div className="section-card-header">
+            <h2 className="section-card-title">
+              Questions for {formatText(selectedExam.title)}
+            </h2>
           </div>
 
-          <div className="card-body">
+          <div className="section-card-body">
             {questionsLoading && (
               <div className="alert alert-info">Loading questions...</div>
             )}
 
             {questions.length === 0 && !questionsLoading && (
-              <p className="text-muted">No questions added yet.</p>
+              <div className="empty-state">No questions added yet.</div>
             )}
 
-            {questions.map((question, index) => (
-              <div className="border rounded p-3 mb-3" key={question.id}>
-                <h5 className="fw-bold">
-                  {index + 1}. {getQuestionTitle(question)}
-                </h5>
+            <div className="question-list">
+              {questions.map((question, index) => (
+                <article className="question-card" key={question.id}>
+                  <h3 className="h5 question-card-title">
+                    {index + 1}. {getQuestionTitle(question)}
+                  </h3>
 
-                <p className="text-muted small mb-2">
-                  Points: {formatText(question.points)}
-                </p>
+                  <p className="text-muted small mb-3">
+                    Points: {formatText(question.points)}
+                  </p>
 
-                <ul className="mb-0">
-                  {getQuestionOptions(question).map((option) => (
-                    <li key={option.id || option.position || option.optionText}>
-                      {formatText(option.optionText || option.text)}
-                      {option.isCorrect && (
-                        <span className="badge bg-success ms-2">Correct</span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+                  <ul className="question-option-list">
+                    {getQuestionOptions(question).map((option) => (
+                      <li key={option.id || option.position || option.optionText}>
+                        {formatText(option.optionText || option.text)}
+                        {option.isCorrect && (
+                          <span className="badge bg-success status-badge ms-2">
+                            Correct
+                          </span>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
 
             <hr />
 
             <h4 className="fw-bold mb-3">Add Multiple Choice Question</h4>
 
             <form onSubmit={handleAddQuestion}>
-              <div className="mb-3">
-                <label className="form-label">Question type</label>
-                <select
-                  className="form-select"
-                  value={selectedQuestionTypeId}
-                  onChange={(event) =>
-                    setSelectedQuestionTypeId(event.target.value)
-                  }
-                  required
-                >
-                  {questionTypes.map((type) => (
-                    <option key={type.id} value={type.id}>
-                      {formatText(type.name || type.code)}
-                    </option>
-                  ))}
-                </select>
+              <div className="row g-3">
+                <div className="col-md-8">
+                  <label className="form-label">Question type</label>
+                  <select
+                    className="form-select"
+                    value={selectedQuestionTypeId}
+                    onChange={(event) =>
+                      setSelectedQuestionTypeId(event.target.value)
+                    }
+                    required
+                  >
+                    {questionTypes.map((type) => (
+                      <option key={type.id} value={type.id}>
+                        {formatText(type.name || type.code)}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="col-md-4">
+                  <label className="form-label">Points</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    min="1"
+                    value={questionPoints}
+                    onChange={(event) => setQuestionPoints(event.target.value)}
+                    required
+                  />
+                </div>
               </div>
 
               <div className="mb-3">
@@ -740,18 +771,6 @@ function TeacherExamsPage({ currentUser, onBack }) {
                   rows="3"
                   value={questionText}
                   onChange={(event) => setQuestionText(event.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Points</label>
-                <input
-                  type="number"
-                  className="form-control"
-                  min="1"
-                  value={questionPoints}
-                  onChange={(event) => setQuestionPoints(event.target.value)}
                   required
                 />
               </div>
@@ -790,57 +809,61 @@ function TeacherExamsPage({ currentUser, onBack }) {
               </button>
             </form>
           </div>
-        </div>
+        </section>
       )}
 
       {selectedSubmissionsExam && (
-        <div className="card shadow-sm mt-4">
-          <div className="card-header bg-dark text-white fw-bold">
-            Submissions for {formatText(selectedSubmissionsExam.title)}
+        <section className="section-card management-section">
+          <div className="section-card-header">
+            <h2 className="section-card-title">
+              Submissions for {formatText(selectedSubmissionsExam.title)}
+            </h2>
           </div>
 
-          <div className="card-body">
+          <div className="section-card-body">
             {submissionsLoading && (
               <div className="alert alert-info">Loading submissions...</div>
             )}
 
             {!submissionsLoading && examSubmissions.length === 0 && (
-              <p className="text-muted">No submissions found for this exam.</p>
+              <div className="empty-state">No submissions found for this exam.</div>
             )}
 
-            {examSubmissions.map((submission) => {
-              const result = getRelatedExamResult(submission)
-              const score = getSubmissionScore(submission, result)
+            <div className="submission-list">
+              {examSubmissions.map((submission) => {
+                const result = getRelatedExamResult(submission)
+                const score = getSubmissionScore(submission, result)
 
-              return (
-                <div className="border rounded p-3 mb-3" key={submission.id}>
-                  <div className="d-flex justify-content-between align-items-start gap-3">
-                    <div>
-                      <h5 className="fw-bold mb-1">
-                        {getSubmissionStudentName(submission)}
-                      </h5>
-                      <p className="text-muted mb-1">
-                        Status: {getSubmissionStatus(submission)}
-                      </p>
-                      <p className="mb-0">
-                        Score: {score === null ? 'Not graded yet' : formatText(score)}
-                      </p>
+                return (
+                  <article className="submission-card" key={submission.id}>
+                    <div className="submission-card-header">
+                      <div>
+                        <h3 className="h5 submission-card-title">
+                          {getSubmissionStudentName(submission)}
+                        </h3>
+                        <p className="text-muted mb-1">
+                          Status: {getSubmissionStatus(submission)}
+                        </p>
+                        <p className="mb-0">
+                          Score: {score === null ? 'Not graded yet' : formatText(score)}
+                        </p>
+                      </div>
+
+                      <button
+                        className="btn btn-sm btn-outline-primary"
+                        onClick={() => openReviewSubmission(submission)}
+                      >
+                        Review / Grade
+                      </button>
                     </div>
-
-                    <button
-                      className="btn btn-sm btn-outline-primary"
-                      onClick={() => openReviewSubmission(submission)}
-                    >
-                      Review / Grade
-                    </button>
-                  </div>
-                </div>
-              )
-            })}
+                  </article>
+                )
+              })}
+            </div>
 
             {selectedSubmission && (
-              <div className="alert alert-light border mt-4 mb-0">
-                <h4 className="fw-bold">Review Submission</h4>
+              <div className="review-panel">
+                <h4 className="fw-bold mb-2">Review Submission</h4>
                 <p className="text-muted mb-2">
                   Student: {getSubmissionStudentName(selectedSubmission)}
                 </p>
@@ -850,7 +873,7 @@ function TeacherExamsPage({ currentUser, onBack }) {
                 )}
 
                 {submissionResult && (
-                  <div className="mb-3">
+                  <div className="result-card mb-3">
                     <p className="mb-1">
                       Current score:{' '}
                       {getResultScore(submissionResult) === null
@@ -869,7 +892,7 @@ function TeacherExamsPage({ currentUser, onBack }) {
                     <h5 className="fw-bold">Answers</h5>
                     {getSubmissionAnswers(submissionResult).map(
                       (answer, index) => (
-                        <div className="border rounded p-2 mb-2" key={index}>
+                        <div className="question-card mb-2" key={index}>
                           <p className="fw-bold mb-1">
                             {getAnswerQuestionText(answer)}
                           </p>
@@ -881,32 +904,34 @@ function TeacherExamsPage({ currentUser, onBack }) {
                 )}
 
                 <form onSubmit={handleSaveGrade}>
-                  <div className="mb-3">
-                    <label className="form-label">Score</label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      min="0"
-                      max="100"
-                      value={gradingScore}
-                      onChange={(event) => setGradingScore(event.target.value)}
-                      required
-                    />
+                  <div className="row g-3">
+                    <div className="col-md-4">
+                      <label className="form-label">Score</label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        min="0"
+                        max="100"
+                        value={gradingScore}
+                        onChange={(event) => setGradingScore(event.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <div className="col-md-8">
+                      <label className="form-label">Feedback</label>
+                      <textarea
+                        className="form-control"
+                        rows="3"
+                        value={gradingFeedback}
+                        onChange={(event) =>
+                          setGradingFeedback(event.target.value)
+                        }
+                      />
+                    </div>
                   </div>
 
-                  <div className="mb-3">
-                    <label className="form-label">Feedback</label>
-                    <textarea
-                      className="form-control"
-                      rows="3"
-                      value={gradingFeedback}
-                      onChange={(event) =>
-                        setGradingFeedback(event.target.value)
-                      }
-                    />
-                  </div>
-
-                  <div className="d-flex flex-wrap gap-2">
+                  <div className="form-actions">
                     <button
                       type="submit"
                       className="btn btn-success"
@@ -928,7 +953,7 @@ function TeacherExamsPage({ currentUser, onBack }) {
               </div>
             )}
           </div>
-        </div>
+        </section>
       )}
     </div>
   )

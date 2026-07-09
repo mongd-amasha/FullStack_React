@@ -13,6 +13,11 @@ import {
   notifyService,
   storageService
 } from './services'
+import {
+  ACCESS_DENIED_SCREEN,
+  canAccessScreen,
+  getDefaultScreenForRole
+} from './utils/roleAccess'
 
 const getSavedAuth = () => {
   const savedUser = storageService.get('currentUser')
@@ -37,7 +42,17 @@ const getSavedScreen = () => {
 
   if (savedAuth.currentUser && savedAuth.token) {
     if (!savedScreen || savedScreen === 'login' || savedScreen === 'register') {
-      return 'dashboard'
+      const defaultScreen = getDefaultScreenForRole(savedAuth.currentUser.role)
+
+      storageService.set('screen', defaultScreen)
+      return defaultScreen
+    }
+
+    if (!canAccessScreen(savedAuth.currentUser.role, savedScreen)) {
+      const defaultScreen = getDefaultScreenForRole(savedAuth.currentUser.role)
+
+      storageService.set('screen', defaultScreen)
+      return defaultScreen
     }
 
     return savedScreen
@@ -53,8 +68,15 @@ function App() {
   const currentUser = authState.currentUser
   const token = authState.token
 
-  const openScreen = (screenName) => {
+  const openScreen = (screenName, roleOverride = currentUser?.role) => {
     loggerService.info(`Opening screen: ${screenName}`)
+
+    if (currentUser && token && !canAccessScreen(roleOverride, screenName)) {
+      storageService.set('screen', getDefaultScreenForRole(roleOverride))
+      setScreen(ACCESS_DENIED_SCREEN)
+      return
+    }
+
     storageService.set('screen', screenName)
     setScreen(screenName)
   }
@@ -65,7 +87,7 @@ function App() {
       currentUser: user,
       token: authApiService.getToken()
     })
-    openScreen('dashboard')
+    openScreen(getDefaultScreenForRole(user.role), user.role)
     setNotification(notifyService.success('Login completed successfully'))
   }
 
@@ -75,7 +97,7 @@ function App() {
       currentUser: user,
       token: authApiService.getToken()
     })
-    openScreen('dashboard')
+    openScreen(getDefaultScreenForRole(user.role), user.role)
     setNotification(notifyService.success('Account created successfully'))
   }
 
@@ -116,6 +138,26 @@ function App() {
     )
   }
 
+  const renderAccessDenied = () => {
+    return (
+      <div className="container py-5">
+        <div className="alert alert-warning shadow-sm">
+          <h1 className="h4 fw-bold">Access Denied</h1>
+          <p className="mb-3">
+            You do not have permission to view this page.
+          </p>
+
+          <button
+            className="btn btn-outline-primary"
+            onClick={() => openScreen(getDefaultScreenForRole(currentUser?.role))}
+          >
+            Back to Dashboard
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   if ((!currentUser || !token) && screen === 'register') {
     return (
       <RegisterPage
@@ -134,9 +176,20 @@ function App() {
     )
   }
 
+  if (screen === ACCESS_DENIED_SCREEN) {
+    return renderWithNavigation(renderAccessDenied())
+  }
+
+  if (!canAccessScreen(currentUser.role, screen)) {
+    return renderWithNavigation(renderAccessDenied())
+  }
+
   if (screen === 'students') {
     return renderWithNavigation(
-      <StudentDetails onBack={() => openScreen('dashboard')} />
+      <StudentDetails
+        currentUser={currentUser}
+        onBack={() => openScreen('dashboard')}
+      />
     )
   }
 
@@ -160,6 +213,7 @@ function App() {
 
   return renderWithNavigation(
     <TeacherDashboard
+      currentUser={currentUser}
       onOpenStudentDetails={() => openScreen('students')}
       onOpenTeacherExams={() => openScreen('teacherExams')}
       onOpenStudentExams={() => openScreen('studentExams')}

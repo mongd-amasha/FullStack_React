@@ -61,3 +61,8 @@ This repository includes final-project documentation under `docs/final/`.
 | Teacher | `dana.teacher@examapp.test` | `123456` |
 | Student | `alice.student@examapp.test` | `123456` |
 | Admin | `admin@examapp.test` | `123456` |
+## Final Submission Package
+
+The final project documentation package is available at:
+
+- [docs/final-submission/README.md](docs/final-submission/README.md)

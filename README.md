@@ -42,3 +42,22 @@ If the database volume already exists, PostgreSQL will not rerun the init SQL fi
 docker compose down -v
 docker compose up --build
 ```
+
+## Final Project Documentation
+
+This repository includes final-project documentation under `docs/final/`.
+
+- [Architecture](docs/final/architecture.md)
+- [Database Design](docs/final/database-design.md)
+- [API Documentation](docs/final/api-documentation.md)
+- [User Flows](docs/final/user-flows.md)
+- [Testing Guide](docs/final/testing-guide.md)
+- [Final Project Summary](docs/final/final-project-summary.md)
+
+### Demo Users
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Teacher | `dana.teacher@examapp.test` | `123456` |
+| Student | `alice.student@examapp.test` | `123456` |
+| Admin | `admin@examapp.test` | `123456` |

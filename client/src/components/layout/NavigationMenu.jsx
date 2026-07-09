@@ -1,4 +1,5 @@
 import { configService } from '../../services'
+import { getNavigationItemsForRole } from '../../utils/roleAccess'
 
 function NavigationMenu({
   currentUser,
@@ -9,6 +10,14 @@ function NavigationMenu({
   onOpenStudentExams,
   onLogout
 }) {
+  const navigationItems = getNavigationItemsForRole(currentUser?.role)
+  const screenHandlers = {
+    dashboard: onOpenDashboard,
+    students: onOpenStudentDetails,
+    teacherExams: onOpenTeacherExams,
+    studentExams: onOpenStudentExams
+  }
+
   const getButtonClass = (screenName) => {
     return activeScreen === screenName
       ? 'btn btn-primary'
@@ -27,33 +36,15 @@ function NavigationMenu({
         </span>
 
         <div className="d-flex flex-wrap gap-2 align-items-center">
-          <button
-            className={getButtonClass('dashboard')}
-            onClick={onOpenDashboard}
-          >
-            Dashboard
-          </button>
-
-          <button
-            className={getButtonClass('teacherExams')}
-            onClick={onOpenTeacherExams}
-          >
-            Teacher Exams
-          </button>
-
-          <button
-            className={getButtonClass('studentExams')}
-            onClick={onOpenStudentExams}
-          >
-            Student Exams
-          </button>
-
-          <button
-            className={getButtonClass('students')}
-            onClick={onOpenStudentDetails}
-          >
-            Student Details
-          </button>
+          {navigationItems.map((item) => (
+            <button
+              key={item.screen}
+              className={getButtonClass(item.screen)}
+              onClick={screenHandlers[item.screen]}
+            >
+              {item.label}
+            </button>
+          ))}
 
           <span className="text-muted ms-2">
             {currentUser?.fullName || currentUser?.name || currentUser?.email}

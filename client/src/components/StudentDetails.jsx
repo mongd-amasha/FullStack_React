@@ -33,7 +33,47 @@ const students = [
   }
 ]
 
-function StudentDetails({ onBack }) {
+function StudentDetails({ currentUser, onBack }) {
+  const isStudent = String(currentUser?.role || '').toLowerCase() === 'student'
+  const studentName =
+    currentUser?.fullName || currentUser?.name || currentUser?.email || 'Student'
+  const studentEmail = currentUser?.email || 'No email available'
+
+  if (isStudent) {
+    return (
+      <div className="container py-5">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h1 className="fw-bold">Student Profile</h1>
+            <p className="text-muted mb-0">
+              View your account information.
+            </p>
+          </div>
+
+          <button className="btn btn-outline-primary" onClick={onBack}>
+            Back to Dashboard
+          </button>
+        </div>
+
+        <div className="row g-4">
+          <div className="col-md-6">
+            <div className="card shadow-sm h-100 student-card">
+              <div className="card-body">
+                <h4 className="fw-bold mb-1">{studentName}</h4>
+                <p className="text-muted mb-3">{studentEmail}</p>
+
+                <p className="mb-0">
+                  <strong>Role:</strong>{' '}
+                  <span className="badge bg-success">Student</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="container py-5">
       <div className="d-flex justify-content-between align-items-center mb-4">

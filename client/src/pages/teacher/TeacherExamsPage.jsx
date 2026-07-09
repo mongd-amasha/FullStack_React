@@ -8,7 +8,7 @@ function TeacherExamsPage({ currentUser, onBack }) {
   const [description, setDescription] = useState('')
   const [durationMinutes, setDurationMinutes] = useState(60)
   const [status, setStatus] = useState('draft')
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
@@ -46,22 +46,51 @@ function TeacherExamsPage({ currentUser, onBack }) {
     }
   }
 
-  const loadQuestionTypes = async () => {
-    try {
-      const types = await examApiService.getQuestionTypes()
-      setQuestionTypes(types)
-
-      if (types.length > 0) {
-        setSelectedQuestionTypeId(types[0].id)
-      }
-    } catch (error) {
-      setError(error.message || 'Failed to load question types')
-    }
-  }
-
   useEffect(() => {
-    loadExams()
-    loadQuestionTypes()
+    let isCurrent = true
+
+    async function loadInitialExams() {
+      try {
+        const examsData = await examApiService.getExams()
+
+        if (isCurrent) {
+          setExams(examsData)
+        }
+      } catch (error) {
+        if (isCurrent) {
+          setError(error.message || 'Failed to load exams')
+        }
+      } finally {
+        if (isCurrent) {
+          setLoading(false)
+        }
+      }
+    }
+
+    async function loadInitialQuestionTypes() {
+      try {
+        const types = await examApiService.getQuestionTypes()
+
+        if (isCurrent) {
+          setQuestionTypes(types)
+
+          if (types.length > 0) {
+            setSelectedQuestionTypeId(types[0].id)
+          }
+        }
+      } catch (error) {
+        if (isCurrent) {
+          setError(error.message || 'Failed to load question types')
+        }
+      }
+    }
+
+    loadInitialExams()
+    loadInitialQuestionTypes()
+
+    return () => {
+      isCurrent = false
+    }
   }, [])
 
   const clearForm = () => {

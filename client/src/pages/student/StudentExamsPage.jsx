@@ -14,28 +14,14 @@ function StudentExamsPage({ currentUser, onBack }) {
   const [results, setResults] = useState([])
   const [selectedResult, setSelectedResult] = useState(null)
   const [answers, setAnswers] = useState({})
-  const [loading, setLoading] = useState(false)
-  const [submissionsLoading, setSubmissionsLoading] = useState(false)
-  const [resultsLoading, setResultsLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [submissionsLoading, setSubmissionsLoading] = useState(true)
+  const [resultsLoading, setResultsLoading] = useState(true)
   const [resultLoading, setResultLoading] = useState(false)
   const [examLoading, setExamLoading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
-
-  async function loadExams() {
-    setLoading(true)
-    setError('')
-
-    try {
-      const examsData = await examApiService.getExams()
-      setExams(examsData)
-    } catch (error) {
-      setError(error.message || 'Failed to load exams')
-    } finally {
-      setLoading(false)
-    }
-  }
 
   async function loadMySubmissions() {
     setSubmissionsLoading(true)
@@ -64,9 +50,69 @@ function StudentExamsPage({ currentUser, onBack }) {
   }
 
   useEffect(() => {
-    loadExams()
-    loadMySubmissions()
-    loadMyResults()
+    let isCurrent = true
+
+    async function loadInitialExams() {
+      try {
+        const examsData = await examApiService.getExams()
+
+        if (isCurrent) {
+          setExams(examsData)
+        }
+      } catch (error) {
+        if (isCurrent) {
+          setError(error.message || 'Failed to load exams')
+        }
+      } finally {
+        if (isCurrent) {
+          setLoading(false)
+        }
+      }
+    }
+
+    async function loadInitialSubmissions() {
+      try {
+        const submissionsData = await submissionApiService.getMySubmissions()
+
+        if (isCurrent) {
+          setSubmissions(submissionsData)
+        }
+      } catch (error) {
+        if (isCurrent) {
+          setError(error.message || 'Failed to load submissions')
+        }
+      } finally {
+        if (isCurrent) {
+          setSubmissionsLoading(false)
+        }
+      }
+    }
+
+    async function loadInitialResults() {
+      try {
+        const resultsData = await resultApiService.getMyResults()
+
+        if (isCurrent) {
+          setResults(resultsData)
+        }
+      } catch (error) {
+        if (isCurrent) {
+          setError(error.message || 'Failed to load results')
+        }
+      } finally {
+        if (isCurrent) {
+          setResultsLoading(false)
+        }
+      }
+    }
+
+    loadInitialExams()
+    loadInitialSubmissions()
+    loadInitialResults()
+
+    return () => {
+      isCurrent = false
+    }
   }, [])
 
   const openExam = async (exam) => {

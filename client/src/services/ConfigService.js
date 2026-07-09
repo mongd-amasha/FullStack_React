@@ -4,7 +4,7 @@ class ConfigService {
   }
 
   getApiMode() {
-    return 'Mock API'
+    return 'Real Auth API'
   }
 
   getVersion() {

@@ -7,14 +7,51 @@ import TeacherDashboard from './components/TeacherDashboard'
 import RegisterPage from './pages/auth/RegisterPage'
 import StudentExamsPage from './pages/student/StudentExamsPage'
 import TeacherExamsPage from './pages/teacher/TeacherExamsPage'
-import { loggerService, notifyService, storageService } from './services'
+import {
+  authApiService,
+  loggerService,
+  notifyService,
+  storageService
+} from './services'
+
+const getSavedAuth = () => {
+  const savedUser = storageService.get('currentUser')
+  const savedToken = storageService.get('token')
+
+  if (!savedUser || !savedToken) {
+    return {
+      currentUser: null,
+      token: null
+    }
+  }
+
+  return {
+    currentUser: savedUser,
+    token: savedToken
+  }
+}
+
+const getSavedScreen = () => {
+  const savedScreen = storageService.get('screen')
+  const savedAuth = getSavedAuth()
+
+  if (savedAuth.currentUser && savedAuth.token) {
+    if (!savedScreen || savedScreen === 'login' || savedScreen === 'register') {
+      return 'dashboard'
+    }
+
+    return savedScreen
+  }
+
+  return savedScreen === 'register' ? 'register' : 'login'
+}
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(() =>
-    storageService.get('currentUser')
-  )
-  const [screen, setScreen] = useState(() => storageService.get('screen') || 'login')
+  const [authState, setAuthState] = useState(getSavedAuth)
+  const [screen, setScreen] = useState(getSavedScreen)
   const [notification, setNotification] = useState(null)
+  const currentUser = authState.currentUser
+  const token = authState.token
 
   const openScreen = (screenName) => {
     loggerService.info(`Opening screen: ${screenName}`)
@@ -24,25 +61,31 @@ function App() {
 
   const handleLogin = (user) => {
     loggerService.info(`User logged in: ${user.email}`)
-    storageService.set('currentUser', user)
-    setCurrentUser(user)
+    setAuthState({
+      currentUser: user,
+      token: authApiService.getToken()
+    })
     openScreen('dashboard')
     setNotification(notifyService.success('Login completed successfully'))
   }
 
   const handleRegister = (user) => {
     loggerService.info(`User registered: ${user.email}`)
-    storageService.set('currentUser', user)
-    setCurrentUser(user)
+    setAuthState({
+      currentUser: user,
+      token: authApiService.getToken()
+    })
     openScreen('dashboard')
     setNotification(notifyService.success('Account created successfully'))
   }
 
   const handleLogout = () => {
     loggerService.info('User logged out')
-    storageService.remove('currentUser')
-    storageService.remove('screen')
-    setCurrentUser(null)
+    authApiService.logout()
+    setAuthState({
+      currentUser: null,
+      token: null
+    })
     setScreen('login')
     setNotification(null)
   }
@@ -73,7 +116,7 @@ function App() {
     )
   }
 
-  if (!currentUser && screen === 'register') {
+  if ((!currentUser || !token) && screen === 'register') {
     return (
       <RegisterPage
         onRegister={handleRegister}
@@ -82,7 +125,7 @@ function App() {
     )
   }
 
-  if (!currentUser) {
+  if (!currentUser || !token) {
     return (
       <LoginScreen
         onLogin={handleLogin}

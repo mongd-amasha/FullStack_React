@@ -364,21 +364,22 @@ function StudentExamsPage({ currentUser, onBack }) {
 
   if (selectedExam) {
     return (
-      <div className="container py-5">
+      <div className="container page-container">
         {error && <div className="alert alert-danger">{error}</div>}
         {message && <div className="alert alert-success">{message}</div>}
 
-        <div className="d-flex justify-content-between align-items-center mb-4">
+        <div className="page-header">
           <div>
-            <h1 className="fw-bold">{formatText(selectedExam.title)}</h1>
-            <p className="text-muted mb-0">
+            <p className="page-kicker">Exam Session</p>
+            <h1 className="page-title">{formatText(selectedExam.title)}</h1>
+            <p className="page-subtitle mb-0">
               {formatText(selectedExam.description)}
             </p>
-            <p className="text-muted small mb-0">
+            <p className="page-meta mb-0">
               Duration: {getExamDuration(selectedExam)} minutes
             </p>
             {currentUser && (
-              <p className="text-muted small mb-0">
+              <p className="page-meta mb-0">
                 Student: {formatText(currentUser.fullName || currentUser.email)}
               </p>
             )}
@@ -393,12 +394,12 @@ function StudentExamsPage({ currentUser, onBack }) {
           <div className="alert alert-info text-center">Opening exam...</div>
         )}
 
-        <div className="card shadow-sm">
-          <div className="card-header bg-primary text-white fw-bold">
-            Exam Questions
+        <section className="section-card">
+          <div className="section-card-header">
+            <h2 className="section-card-title">Exam Questions</h2>
           </div>
 
-          <div className="card-body">
+          <div className="section-card-body">
             {isSubmitted && (
               <div className="alert alert-success">
                 Exam submitted successfully.
@@ -406,65 +407,67 @@ function StudentExamsPage({ currentUser, onBack }) {
             )}
 
             <form onSubmit={handleSubmit}>
-              {questions.map((question, index) => (
-                <div className="border rounded p-3 mb-3" key={question.id}>
-                  <h5 className="fw-bold">
-                    {index + 1}. {getQuestionText(question)}
-                  </h5>
+              <div className="question-list">
+                {questions.map((question, index) => (
+                  <article className="question-card" key={question.id}>
+                    <h3 className="h5 question-card-title">
+                      {index + 1}. {getQuestionText(question)}
+                    </h3>
 
-                  {question.points && (
-                    <p className="text-muted small mb-2">
-                      Points: {formatText(question.points)}
-                    </p>
-                  )}
+                    {question.points && (
+                      <p className="text-muted small mb-3">
+                        Points: {formatText(question.points)}
+                      </p>
+                    )}
 
-                  {getQuestionOptions(question).length > 0 ? (
-                    getQuestionOptions(question).map((option) => {
-                      const optionId = getOptionId(option)
+                    {getQuestionOptions(question).length > 0 ? (
+                      getQuestionOptions(question).map((option) => {
+                        const optionId = getOptionId(option)
 
-                      return (
-                        <div className="form-check" key={optionId}>
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name={`question-${question.id}`}
-                            value={optionId}
-                            checked={
-                              answers[question.id]?.selectedOptionId ===
-                              optionId
-                            }
-                            onChange={() =>
-                              handleOptionAnswerChange(question.id, optionId)
-                            }
-                            disabled={!!isSubmitted}
-                            required
-                          />
+                        return (
+                          <div className="form-check answer-option" key={optionId}>
+                            <input
+                              className="form-check-input"
+                              type="radio"
+                              name={`question-${question.id}`}
+                              value={optionId}
+                              checked={
+                                answers[question.id]?.selectedOptionId ===
+                                optionId
+                              }
+                              onChange={() =>
+                                handleOptionAnswerChange(question.id, optionId)
+                              }
+                              disabled={!!isSubmitted}
+                              required
+                            />
 
-                          <label className="form-check-label">
-                            {getOptionText(option)}
-                          </label>
-                        </div>
-                      )
-                    })
-                  ) : (
-                    <textarea
-                      className="form-control"
-                      rows="3"
-                      value={answers[question.id]?.answerText || ''}
-                      onChange={(event) =>
-                        handleTextAnswerChange(question.id, event.target.value)
-                      }
-                      disabled={!!isSubmitted}
-                      required
-                    />
-                  )}
-                </div>
-              ))}
+                            <label className="form-check-label">
+                              {getOptionText(option)}
+                            </label>
+                          </div>
+                        )
+                      })
+                    ) : (
+                      <textarea
+                        className="form-control"
+                        rows="3"
+                        value={answers[question.id]?.answerText || ''}
+                        onChange={(event) =>
+                          handleTextAnswerChange(question.id, event.target.value)
+                        }
+                        disabled={!!isSubmitted}
+                        required
+                      />
+                    )}
+                  </article>
+                ))}
+              </div>
 
               {!isSubmitted && (
                 <button
                   type="submit"
-                  className="btn btn-success"
+                  className="btn btn-success mt-3"
                   disabled={submitting || questions.length === 0}
                 >
                   {submitting ? 'Submitting...' : 'Submit Exam'}
@@ -472,21 +475,22 @@ function StudentExamsPage({ currentUser, onBack }) {
               )}
             </form>
           </div>
-        </div>
+        </section>
       </div>
     )
   }
 
   return (
-    <div className="container py-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
+    <div className="container page-container">
+      <div className="page-header">
         <div>
-          <h1 className="fw-bold">Student Exams</h1>
-          <p className="text-muted mb-0">
+          <p className="page-kicker">Student Workspace</p>
+          <h1 className="page-title">Student Exams</h1>
+          <p className="page-subtitle mb-0">
             View available exams, answer questions, and see your result.
           </p>
           {currentUser && (
-            <p className="text-muted small mb-0">
+            <p className="page-meta mb-0">
               Logged in as {formatText(currentUser.fullName || currentUser.email)}
             </p>
           )}
@@ -504,19 +508,24 @@ function StudentExamsPage({ currentUser, onBack }) {
       <div className="row g-4">
         {exams.map((exam) => (
           <div className="col-md-6" key={exam.id}>
-            <div className="card shadow-sm h-100">
-              <div className="card-body">
-                <h4 className="fw-bold">{formatText(exam.title)}</h4>
-                <p className="text-muted">{formatText(exam.description)}</p>
-                <p className="text-muted small mb-2">
-                  Duration: {getExamDuration(exam)} minutes
-                </p>
-                <span className="badge bg-success mb-3">
+            <article className="exam-card h-100">
+              <div className="exam-card-header">
+                <div>
+                  <h3 className="h4 exam-card-title">
+                    {formatText(exam.title)}
+                  </h3>
+                  <p className="text-muted">{formatText(exam.description)}</p>
+                  <div className="exam-meta">
+                    <span>Duration: {getExamDuration(exam)} minutes</span>
+                  </div>
+                </div>
+
+                <span className="badge bg-success status-badge">
                   {formatText(exam.status || 'published')}
                 </span>
+              </div>
 
-                <br />
-
+              <div className="exam-actions">
                 <button
                   className="btn btn-primary"
                   onClick={() => openExam(exam)}
@@ -525,23 +534,23 @@ function StudentExamsPage({ currentUser, onBack }) {
                   {examLoading ? 'Opening...' : 'Start Exam'}
                 </button>
               </div>
-            </div>
+            </article>
           </div>
         ))}
 
         {exams.length === 0 && !loading && (
           <div className="col-12">
-            <div className="alert alert-warning">No active exams available.</div>
+            <div className="empty-state">No active exams available.</div>
           </div>
         )}
       </div>
 
-      <div className="card shadow-sm mt-4">
-        <div className="card-header bg-success text-white fw-bold">
-          My Submissions / Results
+      <section className="section-card management-section">
+        <div className="section-card-header">
+          <h2 className="section-card-title">My Submissions / Results</h2>
         </div>
 
-        <div className="card-body">
+        <div className="section-card-body">
           {(submissionsLoading || resultsLoading) && (
             <div className="alert alert-info">Loading results...</div>
           )}
@@ -550,76 +559,82 @@ function StudentExamsPage({ currentUser, onBack }) {
             !resultsLoading &&
             submissions.length === 0 &&
             results.length === 0 && (
-              <p className="text-muted mb-0">No submissions yet.</p>
+              <div className="empty-state">No submissions yet.</div>
             )}
 
-          {submissions.map((item) => {
-            const result = getRelatedResult(item)
-            const resultId = getResultId(result)
-            const score = getResultScore(result)
-            const feedback = getResultFeedback(result)
+          <div className="result-list">
+            {submissions.map((item) => {
+              const result = getRelatedResult(item)
+              const resultId = getResultId(result)
+              const score = getResultScore(result)
+              const feedback = getResultFeedback(result)
 
-            return (
-              <div className="border rounded p-3 mb-3" key={item.id}>
-                <h5 className="fw-bold mb-1">
-                  {getSubmissionExamTitle(item) || 'Exam'}
-                </h5>
-                <p className="text-muted mb-2">
-                  Submission status: {getSubmissionStatus(item)}
-                </p>
-                {result ? (
-                  <>
-                    <p className="mb-1">
-                      Score: {score === null ? 'Not graded yet' : formatText(score)}
-                    </p>
-                    <p className="mb-2">
-                      Feedback: {feedback || 'No feedback yet'}
-                    </p>
-                    <button
-                      className="btn btn-sm btn-outline-primary"
-                      onClick={() => openResult(resultId)}
-                      disabled={!resultId || resultLoading}
-                    >
-                      {resultLoading ? 'Loading...' : 'View Result'}
-                    </button>
-                  </>
-                ) : (
-                  <p className="mb-0">Result: Not published yet</p>
-                )}
-              </div>
-            )
-          })}
+              return (
+                <article className="result-card" key={item.id}>
+                  <div className="result-card-header">
+                    <div>
+                      <h3 className="h5 result-card-title">
+                        {getSubmissionExamTitle(item) || 'Exam'}
+                      </h3>
+                      <p className="text-muted mb-2">
+                        Submission status: {getSubmissionStatus(item)}
+                      </p>
+                    </div>
+                  </div>
+                  {result ? (
+                    <>
+                      <p className="mb-1">
+                        Score: {score === null ? 'Not graded yet' : formatText(score)}
+                      </p>
+                      <p className="mb-2">
+                        Feedback: {feedback || 'No feedback yet'}
+                      </p>
+                      <button
+                        className="btn btn-sm btn-outline-primary"
+                        onClick={() => openResult(resultId)}
+                        disabled={!resultId || resultLoading}
+                      >
+                        {resultLoading ? 'Loading...' : 'View Result'}
+                      </button>
+                    </>
+                  ) : (
+                    <p className="mb-0">Result: Not published yet</p>
+                  )}
+                </article>
+              )
+            })}
 
-          {results
-            .filter(
-              (result) =>
-                !submissions.some(
-                  (item) => item.id === getResultSubmissionId(result)
+            {results
+              .filter(
+                (result) =>
+                  !submissions.some(
+                    (item) => item.id === getResultSubmissionId(result)
+                  )
                 )
-            )
-            .map((result) => (
-              <div className="border rounded p-3 mb-3" key={getResultId(result)}>
-                <h5 className="fw-bold mb-1">
-                  {getSubmissionExamTitle(result) || 'Exam'}
-                </h5>
-                <p className="mb-1">
-                  Score: {formatText(getResultScore(result))}
-                </p>
-                <p className="mb-2">
-                  Feedback: {getResultFeedback(result) || 'No feedback yet'}
-                </p>
-                <button
-                  className="btn btn-sm btn-outline-primary"
-                  onClick={() => openResult(getResultId(result))}
-                  disabled={resultLoading}
-                >
-                  {resultLoading ? 'Loading...' : 'View Result'}
-                </button>
-              </div>
-            ))}
+              .map((result) => (
+                <article className="result-card" key={getResultId(result)}>
+                  <h3 className="h5 result-card-title">
+                    {getSubmissionExamTitle(result) || 'Exam'}
+                  </h3>
+                  <p className="mb-1">
+                    Score: {formatText(getResultScore(result))}
+                  </p>
+                  <p className="mb-2">
+                    Feedback: {getResultFeedback(result) || 'No feedback yet'}
+                  </p>
+                  <button
+                    className="btn btn-sm btn-outline-primary"
+                    onClick={() => openResult(getResultId(result))}
+                    disabled={resultLoading}
+                  >
+                    {resultLoading ? 'Loading...' : 'View Result'}
+                  </button>
+                </article>
+              ))}
+          </div>
 
           {selectedResult && (
-            <div className="alert alert-light border mt-3 mb-0">
+            <div className="result-detail-panel">
               <h5 className="fw-bold">Result Details</h5>
               <p className="mb-1">
                 Score: {formatText(getResultScore(selectedResult))}
@@ -632,7 +647,7 @@ function StudentExamsPage({ currentUser, onBack }) {
                 <>
                   <h6 className="fw-bold">Answer Feedback</h6>
                   {getAnswerFeedback(selectedResult).map((item, index) => (
-                    <div className="border rounded p-2 mb-2" key={index}>
+                    <div className="question-card mb-2" key={index}>
                       <p className="fw-bold mb-1">
                         {getFeedbackQuestionText(item)}
                       </p>
@@ -646,7 +661,7 @@ function StudentExamsPage({ currentUser, onBack }) {
             </div>
           )}
         </div>
-      </div>
+      </section>
     </div>
   )
 }

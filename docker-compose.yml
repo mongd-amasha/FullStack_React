@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: examapp-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: examapp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db/final/001_final_schema.sql:/docker-entrypoint-initdb.d/001_final_schema.sql:ro
+      - ./db/final/002_final_seed.sql:/docker-entrypoint-initdb.d/002_final_seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d examapp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  server:
+    build:
+      context: ./server
+    container_name: examapp-server
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PORT: 5000
+      CLIENT_URL: http://localhost:3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_NAME: examapp
+      JWT_SECRET: final_project_secret_key_123
+    ports:
+      - "5000:5000"
+
+  client:
+    build:
+      context: ./client
+    container_name: examapp-client
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "3000:80"
+
+volumes:
+  postgres_data:

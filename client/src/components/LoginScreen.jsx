@@ -4,21 +4,11 @@ import { authApiService } from '../services'
 const loginPortals = {
   teacher: {
     label: 'Teacher Login',
-    subtitle: 'Login to manage exams, questions, submissions, and grades.',
-    email: 'dana.teacher@examapp.test',
-    password: '123456'
+    subtitle: 'Login to manage exams, questions, submissions, and grades.'
   },
   student: {
     label: 'Student Login',
-    subtitle: 'Login to view exams, submit answers, and see your results.',
-    email: 'alice.student@examapp.test',
-    password: '123456'
-  },
-  admin: {
-    label: 'Admin Login',
-    subtitle: 'Login to manage and review the whole system.',
-    email: 'admin@examapp.test',
-    password: '123456'
+    subtitle: 'Login to view exams, submit answers, and see your results.'
   }
 }
 
@@ -36,23 +26,17 @@ const getRoleMismatchMessage = (role) => {
 
 function LoginScreen({ onLogin, onGoToRegister }) {
   const [selectedPortal, setSelectedPortal] = useState('teacher')
-  const [email, setEmail] = useState(loginPortals.teacher.email)
-  const [password, setPassword] = useState(loginPortals.teacher.password)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const portal = loginPortals[selectedPortal]
 
   const selectPortal = (portalName) => {
-    const nextPortal = loginPortals[portalName]
-
     setSelectedPortal(portalName)
-    setEmail(nextPortal.email)
-    setPassword(nextPortal.password)
+    setEmail('')
+    setPassword('')
     setError('')
-  }
-
-  const applyDemoCredentials = (portalName) => {
-    selectPortal(portalName)
   }
 
   const handleSubmit = async (event) => {
@@ -64,7 +48,7 @@ function LoginScreen({ onLogin, onGoToRegister }) {
       const user = await authApiService.login(email, password)
       const userRole = String(user.role || '').trim().toLowerCase()
 
-      if (userRole !== selectedPortal) {
+      if (userRole !== 'admin' && userRole !== selectedPortal) {
         authApiService.logout()
         setError(getRoleMismatchMessage(userRole))
         return
@@ -86,8 +70,8 @@ function LoginScreen({ onLogin, onGoToRegister }) {
             <p className="page-kicker mb-2">Exam Management System</p>
             <h1 className="fw-bold mb-3">Secure access for every role.</h1>
             <p className="mb-0">
-              Teachers manage exams, students complete assessments, and admins
-              review the complete system from one clean interface.
+              Teachers manage exams and grading while students complete
+              assessments and review their results from a focused interface.
             </p>
 
             <div className="login-highlight-list">
@@ -161,24 +145,6 @@ function LoginScreen({ onLogin, onGoToRegister }) {
                 {loading ? 'Logging in...' : 'Login'}
               </button>
             </form>
-
-            <div className="login-demo mt-4">
-              <p className="text-muted small fw-bold mb-2">Demo credentials</p>
-
-              <div className="d-grid gap-2">
-                {Object.entries(loginPortals).map(([portalName, item]) => (
-                  <button
-                    type="button"
-                    key={portalName}
-                    className="btn btn-light border text-start demo-credential-button"
-                    onClick={() => applyDemoCredentials(portalName)}
-                  >
-                    <span className="fw-bold">{item.label}:</span>{' '}
-                    <span>{item.email} / {item.password}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
 
             <button
               type="button"

@@ -12,12 +12,15 @@ const navigationItems = [
   {
     screen: 'studentExams',
     label: 'Student Exams',
-    allowedRoles: ['student', 'admin']
+    allowedRoles: ['student']
   },
   {
     screen: 'students',
     label: 'Student Details',
-    allowedRoles: ['student', 'teacher', 'admin']
+    allowedRoles: ['student', 'teacher', 'admin'],
+    labelByRole: {
+      student: 'Profile'
+    }
   }
 ]
 
@@ -53,6 +56,6 @@ export const getNavigationItemsForRole = (role) => {
     .filter((item) => item.allowedRoles.includes(normalizedRole))
     .map((item) => ({
       screen: item.screen,
-      label: item.label
+      label: item.labelByRole?.[normalizedRole] || item.label
     }))
 }

@@ -2,6 +2,7 @@ const supertest = require('supertest')
 const {
   authHeader,
   closeDatabase,
+  cleanupTestData,
   getData,
   getId,
   getList,
@@ -11,6 +12,9 @@ const {
   login,
   requestFirst
 } = require('./helpers/apiTestHelper.cjs')
+
+const TEST_EXAM_PREFIX = '__API_TEST__ Exam'
+const LEGACY_TEST_EXAM_PREFIX = 'API Test Exam'
 
 describe('Backend API flows', () => {
   let app
@@ -26,9 +30,14 @@ describe('Backend API flows', () => {
   beforeAll(async () => {
     app = await loadApp()
     api = supertest(app)
+    await cleanupTestData(TEST_EXAM_PREFIX)
+    await cleanupTestData(LEGACY_TEST_EXAM_PREFIX)
   })
 
   afterAll(async () => {
+    await cleanupTestData(TEST_EXAM_PREFIX)
+    await cleanupTestData(LEGACY_TEST_EXAM_PREFIX)
+
     if (typeof app?.close === 'function') {
       await new Promise((resolve) => app.close(resolve))
     }
@@ -80,7 +89,7 @@ describe('Backend API flows', () => {
 
     expect(examsResponse.status).toBe(200)
 
-    const uniqueTitle = `API Test Exam ${Date.now()}`
+    const uniqueTitle = `${TEST_EXAM_PREFIX} ${Date.now()}`
     const createResponse = await api
       .post('/api/exams')
       .set(authHeader(teacher.token))

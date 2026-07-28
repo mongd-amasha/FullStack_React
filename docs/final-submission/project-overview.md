@@ -14,7 +14,6 @@ The system helps teachers create and manage exams, helps students take exams onl
 | --- | --- |
 | Teacher | Create exams, publish exams, manage questions, review submissions, grade results, publish feedback |
 | Student | View available exams, start an exam, submit answers, view published results |
-| Admin | Access the admin role in the system and support administrative flows where available |
 
 ## Demo Users
 
@@ -22,7 +21,8 @@ The system helps teachers create and manage exams, helps students take exams onl
 | --- | --- | --- |
 | Teacher | dana.teacher@examapp.test | 123456 |
 | Student | alice.student@examapp.test | 123456 |
-| Admin | admin@examapp.test | 123456 |
+
+The admin seed account remains internal for backend/API coverage and is not shown as a normal login portal.
 
 ## Main Features
 
@@ -54,7 +54,7 @@ The system helps teachers create and manage exams, helps students take exams onl
 ## Project Goals
 
 1. Build a working full stack application with clear separation between frontend, backend, and database.
-2. Implement authentication and role-based access for teacher, student, and admin users.
+2. Implement authentication and role-based access for teacher and student users, with an internal admin role kept for backend coverage.
 3. Model exams, questions, submissions, answers, and results in a relational database.
 4. Provide realistic workflows for exam publishing, exam submission, grading, and result viewing.
 5. Package the system with clear run, test, and deployment instructions.

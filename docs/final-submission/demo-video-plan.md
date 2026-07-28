@@ -12,7 +12,8 @@ Recommended length: 5 to 10 minutes, depending on teacher instructions.
 | --- | --- | --- |
 | Teacher | dana.teacher@examapp.test | 123456 |
 | Student | alice.student@examapp.test | 123456 |
-| Admin | admin@examapp.test | 123456 |
+
+The demo should focus on the teacher and student flows.
 
 ## Suggested Video Structure
 

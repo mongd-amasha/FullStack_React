@@ -9,6 +9,15 @@ const { pool } = require('../src/config/db');
 
 const PLACEHOLDER_HASH = '$2a$10$placeholderhash';
 const SEED_PASSWORD = '123456';
+const SEED_USER_EMAILS = [
+  'admin@examapp.test',
+  'dana.teacher@examapp.test',
+  'eli.teacher@examapp.test',
+  'alice.student@examapp.test',
+  'ben.student@examapp.test',
+  'cora.student@examapp.test',
+  'noam.student@examapp.test'
+];
 
 const setSeedPasswords = async () => {
   try {
@@ -19,10 +28,11 @@ const setSeedPasswords = async () => {
         UPDATE exam_app.users
         SET password_hash = $1,
             updated_at = NOW()
-        WHERE password_hash = $2
+        WHERE email = ANY($2::text[])
+           OR password_hash = $3
         RETURNING id, email, role
       `,
-      [passwordHash, PLACEHOLDER_HASH]
+      [passwordHash, SEED_USER_EMAILS, PLACEHOLDER_HASH]
     );
 
     console.log(`Updated ${result.rowCount} seed user password(s).`);

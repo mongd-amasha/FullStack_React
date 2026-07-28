@@ -351,7 +351,7 @@
   border-radius: var(--app-radius);
   display: grid;
   gap: 6px;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   padding: 6px;
 }
 
@@ -361,26 +361,6 @@
   font-weight: 800;
   line-height: 1.2;
   min-height: 42px;
-}
-
-.login-demo {
-  background: var(--app-surface-soft);
-  border: 1px solid var(--app-border);
-  border-radius: var(--app-radius);
-  padding: 14px;
-}
-
-.demo-credential-button {
-  background: #ffffff;
-  border-color: var(--app-border) !important;
-  color: var(--app-text);
-  font-size: 0.9rem;
-  line-height: 1.35;
-  padding: 10px 12px;
-}
-
-.demo-credential-button:hover {
-  background: #eef3fb;
 }
 
 .dashboard-hero {

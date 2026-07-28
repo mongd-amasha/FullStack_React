@@ -1,68 +1,104 @@
 # Full Stack Exam Management System
 
-## Docker Setup
+Full stack final project for managing exams with teacher and student workflows.
 
-This project can run with Docker Compose using three services:
+## Fresh Clone And Run
 
-- `postgres` - PostgreSQL 16 database
-- `server` - Express API on port `5000`
-- `client` - React production build served by nginx on port `3000`
+Requirements:
 
-### Start The Project
+- Docker Desktop or Docker Engine
+- No personal Docker account is required
+- No local PostgreSQL, Node.js, or developer-machine setup is required when using Docker
 
 ```bash
+git clone <repository-url>
+cd FullStack_React
+git checkout dev
 docker compose up --build
 ```
 
-### URLs
+Open the app:
 
-- App: http://localhost:3000
-- API health: http://localhost:5000/api/health
-- Backend API base URL: http://localhost:5000/api
+```text
+http://localhost:3000/FullStack_React/
+```
 
-### Database
+Health check:
 
-- Host from your computer: `localhost`
-- Host from backend container: `postgres`
-- Port: `5432`
-- Database: `examapp`
-- User: `postgres`
-- Password: `postgres`
+```text
+http://localhost:5000/api/health
+```
 
-PostgreSQL uses the named volume `postgres_data` for persistence.
+## Demo Users
 
-On the first run, Docker initializes the database with:
+Use these seeded accounts for the teacher/student presentation flow:
 
-- `db/final/001_final_schema.sql`
-- `db/final/002_final_seed.sql`
+| Role | Email | Password |
+| --- | --- | --- |
+| Teacher | `dana.teacher@examapp.test` | `123456` |
+| Student | `alice.student@examapp.test` | `123456` |
 
-If the database volume already exists, PostgreSQL will not rerun the init SQL files automatically. To recreate the database from seed data, stop the stack and remove the volume:
+The backend still keeps an internal admin seed user for protected API coverage, but the normal UI presentation is teacher and student focused.
+
+## Reset The Docker Database
+
+PostgreSQL uses the named Docker volume `postgres_data`. If you want a fresh seeded database:
 
 ```bash
 docker compose down -v
 docker compose up --build
 ```
 
-## Final Project Documentation
+On first run, Docker initializes PostgreSQL with:
 
-This repository includes final-project documentation under `docs/final/`.
+- `db/final/001_final_schema.sql`
+- `db/final/002_final_seed.sql`
 
-- [Architecture](docs/final/architecture.md)
-- [Database Design](docs/final/database-design.md)
-- [API Documentation](docs/final/api-documentation.md)
-- [User Flows](docs/final/user-flows.md)
-- [Testing Guide](docs/final/testing-guide.md)
-- [Final Project Summary](docs/final/final-project-summary.md)
+## Project URLs
 
-### Demo Users
+- App: http://localhost:3000/FullStack_React/
+- API health: http://localhost:5000/api/health
+- Backend API base URL: http://localhost:5000/api
 
-| Role | Email | Password |
-| --- | --- | --- |
-| Teacher | `dana.teacher@examapp.test` | `123456` |
-| Student | `alice.student@examapp.test` | `123456` |
-| Admin | `admin@examapp.test` | `123456` |
-## Final Submission Package
+## Docker Services
 
-The final project documentation package is available at:
+- `postgres` - PostgreSQL 16 database on port `5432`
+- `server` - Express API on port `5000`
+- `client` - React production build served by nginx on port `3000`
+
+Database settings used by Docker:
+
+| Setting | Value |
+| --- | --- |
+| Database | `examapp` |
+| User | `postgres` |
+| Password | `postgres` |
+| Host from your computer | `localhost` |
+| Host from backend container | `postgres` |
+
+## Final Documentation
+
+The final documentation package is:
 
 - [docs/final-submission/README.md](docs/final-submission/README.md)
+
+Database notes are in:
+
+- [db/README.md](db/README.md)
+
+## Verification Commands
+
+Frontend:
+
+```bash
+cd client
+npm run lint
+npm run build
+```
+
+Backend:
+
+```bash
+cd server
+npm test
+```

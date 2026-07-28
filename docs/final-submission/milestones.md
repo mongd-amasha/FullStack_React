@@ -5,7 +5,7 @@
 Main goals:
 
 - Define the exam management system idea.
-- Identify user roles: teacher, student, and admin.
+- Identify user roles: teacher and student, with an internal admin role for backend coverage.
 - Define the core entities: users, exams, questions, submissions, answers, and results.
 - Choose the technology stack: React, Express, PostgreSQL, JWT, Docker.
 
@@ -44,7 +44,7 @@ Main goals:
 Deliverables:
 
 - PostgreSQL schema.
-- Demo users for teacher, student, and admin.
+- Demo users for teacher and student.
 - Data relationships ready for API workflows.
 
 ## Milestone 4: Frontend Foundation

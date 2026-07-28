@@ -4,7 +4,7 @@
 
 The application is split into three main parts:
 
-- `client/`: React frontend used by students, teachers, and admins.
+- `client/`: React frontend used by students and teachers.
 - `server/`: Express backend that exposes the REST API and applies authentication and authorization.
 - `db/`: PostgreSQL database scripts and schema-related files.
 
@@ -22,7 +22,6 @@ flowchart LR
 
     Teacher[Teacher User] --> Browser
     Student[Student User] --> Browser
-    Admin[Admin User] --> Browser
 ```
 
 ## Request Data Flow
@@ -45,7 +44,7 @@ flowchart LR
 | React Services | Centralize API calls and data exchange with the backend |
 | Express Routes | Define REST endpoints |
 | Auth Middleware | Validate JWT tokens and protect private routes |
-| Role Guards | Restrict teacher/student/admin actions |
+| Role Guards | Restrict teacher/student actions and internal admin-safe access |
 | Controllers | Implement request handling logic |
 | Models / Data Access | Query PostgreSQL and map rows to API responses |
 | PostgreSQL | Store relational project data |
@@ -58,7 +57,8 @@ The application uses roles to separate workflows:
 | --- | --- |
 | Teacher | Manage exams, questions, submissions, and grading |
 | Student | View available exams, submit answers, view results |
-| Admin | Access administrative role paths where implemented |
+
+The backend keeps an internal admin role for API coverage, but the visible presentation flow is teacher and student focused.
 
 Role checks should be enforced on the backend for protected operations. The frontend also uses role-based navigation so users see the screens that match their role.
 

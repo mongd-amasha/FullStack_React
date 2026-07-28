@@ -5,7 +5,7 @@
 | Area | Implemented Project Behavior |
 | --- | --- |
 | Authentication | Users log in with email/password and receive a JWT-backed session |
-| Role Navigation | UI changes based on teacher, student, or admin role |
+| Role Navigation | UI changes based on teacher and student roles, with internal admin-safe fallback |
 | Teacher Exams | Teacher can create, edit, list, and update exam status |
 | Question Management | Teacher can load question types and add questions/options to an exam |
 | Student Exams | Student can view exams, start an exam, answer questions, and submit |
@@ -46,7 +46,7 @@ The project uses REST-style API groups. Endpoint names below describe the implem
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| `GET` | `/api/question-types` | Load supported question types |
+| `GET` | `/api/exams/question-types` | Load supported question types |
 | `GET` | `/api/exams/:examId/questions` | Load questions for an exam |
 | `POST` | `/api/exams/:examId/questions` | Add a question to an exam as a teacher |
 
@@ -54,19 +54,20 @@ The project uses REST-style API groups. Endpoint names below describe the implem
 
 | Method | Path | Purpose |
 | --- | --- | --- |
-| `POST` | `/api/exams/:examId/submissions/start` | Start a student submission |
-| `POST` | `/api/submissions/:submissionId/answers` | Submit student answers |
+| `POST` | `/api/submissions/start` | Start a student submission |
+| `POST` | `/api/submissions/:submissionId/submit` | Submit student answers |
 | `GET` | `/api/submissions/my` | Load the current student's submissions |
-| `GET` | `/api/exams/:examId/submissions` | Load exam submissions as a teacher |
+| `GET` | `/api/submissions/exam/:examId` | Load exam submissions as a teacher |
 
 ### Results
 
 | Method | Path | Purpose |
 | --- | --- | --- |
 | `GET` | `/api/results/my` | Load current student's results |
-| `GET` | `/api/results/:id` | Load a result detail where allowed |
-| `GET` | `/api/submissions/:submissionId/result` | Load result by submission |
-| `POST` | `/api/submissions/:submissionId/grade` | Save teacher grade and feedback |
+| `GET` | `/api/results/my/:resultId` | Load a student result detail |
+| `GET` | `/api/results/submission/:submissionId` | Load result by submission as a teacher |
+| `GET` | `/api/results/exam/:examId` | Load exam results as a teacher |
+| `POST` | `/api/results/submission/:submissionId/grade` | Save teacher grade and feedback |
 | `PATCH` | `/api/results/:id/publish` | Publish a result |
 
 ## Main Workflow Details

@@ -15,7 +15,7 @@ It is responsible for authentication, authorization, business rules, API respons
 - Provide REST API endpoints.
 - Authenticate users with JWT.
 - Protect private routes with authentication middleware.
-- Apply role-based access for teacher, student, and admin workflows.
+- Apply role-based access for teacher and student workflows, with admin-safe backend coverage where needed.
 - Validate API input before database operations.
 - Store and retrieve data from PostgreSQL.
 - Return JSON responses to the React client.
@@ -66,7 +66,8 @@ Example role separation:
 | --- | --- |
 | Teacher | Create/update exams, add questions, review submissions, grade and publish results |
 | Student | Start submissions, submit answers, view own submissions/results |
-| Admin | Administrative routes where implemented |
+
+An internal admin role exists in the seed data for backend coverage, but it is not presented as a main UI workflow.
 
 ## Error Handling
 

@@ -72,7 +72,7 @@ class TeacherDashboard extends Component {
         visible: true
       },
       {
-        title: 'Student Details',
+        title: role === 'student' ? 'Profile' : 'Student Details',
         copy: role === 'student'
           ? 'Review your profile information.'
           : 'Review student profiles, exam scores, and learning status.',

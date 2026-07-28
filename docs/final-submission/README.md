@@ -12,7 +12,8 @@ Use these seeded demo accounts during the presentation:
 | --- | --- | --- |
 | Teacher | dana.teacher@examapp.test | 123456 |
 | Student | alice.student@examapp.test | 123456 |
-| Admin | admin@examapp.test | 123456 |
+
+The admin seed account is internal and is not part of the normal presentation flow.
 
 ## Documentation Index
 
@@ -43,6 +44,13 @@ Open:
 ```text
 Frontend: http://localhost:3000/FullStack_React/
 Backend health: http://localhost:5000/api/health
+```
+
+Reset to a fresh seeded database:
+
+```bash
+docker compose down -v
+docker compose up --build
 ```
 
 ### Local Development

@@ -7,13 +7,13 @@ BEGIN;
 
 INSERT INTO users (id, full_name, email, password_hash, role)
 VALUES
-  ('00000000-0000-0000-0000-000000000001', 'System Admin', 'admin@examapp.test', '$2a$10$placeholderhash', 'admin'),
-  ('00000000-0000-0000-0000-000000000002', 'Dana Teacher', 'dana.teacher@examapp.test', '$2a$10$placeholderhash', 'teacher'),
-  ('00000000-0000-0000-0000-000000000003', 'Eli Teacher', 'eli.teacher@examapp.test', '$2a$10$placeholderhash', 'teacher'),
-  ('00000000-0000-0000-0000-000000000011', 'Alice Student', 'alice.student@examapp.test', '$2a$10$placeholderhash', 'student'),
-  ('00000000-0000-0000-0000-000000000012', 'Ben Student', 'ben.student@examapp.test', '$2a$10$placeholderhash', 'student'),
-  ('00000000-0000-0000-0000-000000000013', 'Cora Student', 'cora.student@examapp.test', '$2a$10$placeholderhash', 'student'),
-  ('00000000-0000-0000-0000-000000000014', 'Noam Student', 'noam.student@examapp.test', '$2a$10$placeholderhash', 'student')
+  ('00000000-0000-0000-0000-000000000001', 'System Admin', 'admin@examapp.test', '$2a$10$u2ZUsVR26s43eN0J.SXCwOkzlYqY/u8buN8zW.LgoxREKoMlsaHWm', 'admin'),
+  ('00000000-0000-0000-0000-000000000002', 'Dana Teacher', 'dana.teacher@examapp.test', '$2a$10$u2ZUsVR26s43eN0J.SXCwOkzlYqY/u8buN8zW.LgoxREKoMlsaHWm', 'teacher'),
+  ('00000000-0000-0000-0000-000000000003', 'Eli Teacher', 'eli.teacher@examapp.test', '$2a$10$u2ZUsVR26s43eN0J.SXCwOkzlYqY/u8buN8zW.LgoxREKoMlsaHWm', 'teacher'),
+  ('00000000-0000-0000-0000-000000000011', 'Alice Student', 'alice.student@examapp.test', '$2a$10$u2ZUsVR26s43eN0J.SXCwOkzlYqY/u8buN8zW.LgoxREKoMlsaHWm', 'student'),
+  ('00000000-0000-0000-0000-000000000012', 'Ben Student', 'ben.student@examapp.test', '$2a$10$u2ZUsVR26s43eN0J.SXCwOkzlYqY/u8buN8zW.LgoxREKoMlsaHWm', 'student'),
+  ('00000000-0000-0000-0000-000000000013', 'Cora Student', 'cora.student@examapp.test', '$2a$10$u2ZUsVR26s43eN0J.SXCwOkzlYqY/u8buN8zW.LgoxREKoMlsaHWm', 'student'),
+  ('00000000-0000-0000-0000-000000000014', 'Noam Student', 'noam.student@examapp.test', '$2a$10$u2ZUsVR26s43eN0J.SXCwOkzlYqY/u8buN8zW.LgoxREKoMlsaHWm', 'student')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO question_types (id, code, name, description)

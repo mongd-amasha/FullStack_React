@@ -14,7 +14,7 @@ client/
 
 - Render the login/register and role-based screens.
 - Store the logged-in user state and token through client services.
-- Show different navigation options for teacher, student, and admin users.
+- Show different navigation options for teacher and student users, while keeping internal admin users on admin-safe pages.
 - Send API requests to the Express backend.
 - Display loading, success, and error states.
 - Keep UI behavior polished and predictable.
